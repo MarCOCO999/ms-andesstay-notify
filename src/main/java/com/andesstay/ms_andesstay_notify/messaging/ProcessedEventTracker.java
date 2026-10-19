@@ -11,14 +11,23 @@ import java.util.concurrent.ConcurrentHashMap;
  * base de datos segun el caso), no sobrevive un reinicio ni se comparte entre replicas;
  * si el servicio escala a mas de una instancia conviene reemplazarla por un store
  * compartido (p.ej. Redis) para idempotencia real.
+ *
+ * El evento se marca recien despues de procesarlo con exito: si se marcara antes, un
+ * mensaje que fallo y vuelve desde la cola de reintento (o se reprocesa desde la DLQ)
+ * se descartaria como duplicado sin haberse enviado nunca.
  */
 @Component
 public class ProcessedEventTracker {
 
     private final Set<String> processedEventIds = ConcurrentHashMap.newKeySet();
 
-    /** @return true si es la primera vez que se ve este eventId (hay que procesarlo). */
-    public boolean markIfNew(String eventId) {
-        return processedEventIds.add(eventId);
+    public boolean isProcessed(String eventId) {
+        return eventId != null && processedEventIds.contains(eventId);
+    }
+
+    public void markProcessed(String eventId) {
+        if (eventId != null) {
+            processedEventIds.add(eventId);
+        }
     }
 }

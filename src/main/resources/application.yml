@@ -17,6 +17,51 @@ spring:
 server:
   port: ${SERVER_PORT:8090}
 
+andesstay:
+  # Topologia de mensajeria centralizada: RabbitTopologyConfig declara todas las colas,
+  # exchanges y bindings a partir de estos nombres, y los listeners leen el nombre de su cola
+  # desde aqui. Ningun nombre de cola/exchange/routing key esta escrito en el codigo.
+  messaging:
+    exchanges:
+      direct: cmd.direct          # comando exacto (p.ej. email.send)
+      topic: cmd.topic            # variantes del dominio (p.ej. email.*)
+      dead-letter: cmd.dead.dlx   # destino de los NACK sin requeue -> DLQ de cada flujo
+      retry: cmd.retry            # destino de los reintentos con espera
+    retry:
+      # Intentos totales para un error recuperable (1 original + reintentos) antes de ir a la DLQ.
+      max-attempts: ${MESSAGING_RETRY_MAX_ATTEMPTS:3}
+      # Espera entre intentos: TTL de la cola de reintento, que al vencer devuelve el mensaje a la cola principal.
+      delay-ms: ${MESSAGING_RETRY_DELAY_MS:5000}
+    flows:
+      email:
+        queue: q.cmd.email
+        dlq: q.cmd.email.dlq
+        retry-queue: q.cmd.email.retry
+        direct-routing-key: email.send
+        topic-pattern: "email.*"
+        dead-routing-key: email.dead
+        retry-routing-key: email.retry
+      housekeeping:
+        queue: q.cmd.housekeeping
+        dlq: q.cmd.housekeeping.dlq
+        retry-queue: q.cmd.housekeeping.retry
+        direct-routing-key: housekeeping.ticket
+        topic-pattern: "housekeeping.#"
+        dead-routing-key: housekeeping.dead
+        retry-routing-key: housekeeping.retry
+      voucher:
+        queue: q.cmd.voucher
+        dlq: q.cmd.voucher.dlq
+        retry-queue: q.cmd.voucher.retry
+        direct-routing-key: voucher.gen
+        topic-pattern: "voucher.*"
+        dead-routing-key: voucher.dead
+        retry-routing-key: voucher.retry
+  notify:
+    # Solo para demostrar el flujo de reintentos: probabilidad (0.0-1.0) de que el proveedor
+    # simulado falle de forma transitoria. En 0 por defecto; p.ej. 0.5 para la demo.
+    simulated-transient-failure-rate: ${NOTIFY_SIMULATED_FAILURE_RATE:0.0}
+
 management:
   endpoints:
     web:
