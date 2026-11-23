@@ -54,7 +54,7 @@ Para demostrar los reintentos sin modificar código, `NOTIFY_SIMULATED_FAILURE_R
 
 ## Stack
 
-- Spring Boot 4.1.1 / Java 21
+- Spring Boot 4.1.1 / Java 25 (LTS)
 - Spring AMQP / RabbitMQ (consumidor con ACK manual)
 
 No tiene base de datos propia: el "envío" de notificaciones se simula (se registra en el log), ya que el caso no exige integración con un proveedor real de email/SMS.
@@ -71,7 +71,7 @@ No tiene base de datos propia: el "envío" de notificaciones se simula (se regis
 
 ## Cómo ejecutarlo en local
 
-Requiere Java 21 y RabbitMQ levantado (ver [andesstay-infra](https://github.com/MarCOCO999/andesstay-infra)).
+Requiere Java 25 y RabbitMQ levantado (ver [andesstay-infra](https://github.com/MarCOCO999/andesstay-infra)).
 
 ```bash
 ./mvnw spring-boot:run
@@ -82,4 +82,4 @@ Requiere Java 21 y RabbitMQ levantado (ver [andesstay-infra](https://github.com/
 
 ## Repos relacionados
 
-[frontend-andesstay](https://github.com/MarCOCO999/frontend-andesstay) · [ms-andesstay-bff](https://github.com/MarCOCO999/ms-andesstay-bff) · [ms-andesstay-reservations](https://github.com/MarCOCO999/ms-andesstay-reservations) · [ms-andesstay-catalog](https://github.com/MarCOCO999/ms-andesstay-catalog) · [ms-andesstay-audit](https://github.com/MarCOCO999/ms-andesstay-audit) · [ms-andesstay-report](https://github.com/MarCOCO999/ms-andesstay-report) · [ms-andesstay-rabbit-admin](https://github.com/MarCOCO999/ms-andesstay-rabbit-admin) · [andesstay-infra](https://github.com/MarCOCO999/andesstay-infra)
+[frontend-andesstay](https://github.com/MarCOCO999/frontend-andesstay) · [ms-andesstay-bff](https://github.com/MarCOCO999/ms-andesstay-bff) · [ms-andesstay-reservations](https://github.com/MarCOCO999/ms-andesstay-reservations) · [ms-andesstay-catalog](https://github.com/MarCOCO999/ms-andesstay-catalog) · [ms-andesstay-audit](https://github.com/MarCOCO999/ms-andesstay-audit) · [ms-andesstay-report](https://github.com/MarCOCO999/ms-andesstay-report) · [ms-andesstay-rabbit-admin](https://github.com/MarCOCO999/ms-andesstay-rabbit-admin) · [ms-andesstay-kafka-admin](https://github.com/MarCOCO999/ms-andesstay-kafka-admin) · [andesstay-infra](https://github.com/MarCOCO999/andesstay-infra)

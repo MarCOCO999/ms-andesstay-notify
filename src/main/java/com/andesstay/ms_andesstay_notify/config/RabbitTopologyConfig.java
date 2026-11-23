@@ -9,22 +9,7 @@ import org.springframework.amqp.core.TopicExchange;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-/**
- * Topologia de mensajeria del caso AndesStay (seccion 8): 3 flujos de comando
- * (email, housekeeping, voucher). Todos los nombres vienen de andesstay.messaging
- * (MessagingProperties / application.yml). Cada flujo tiene tres colas:
- *
- * <ul>
- *   <li><b>Principal</b> (p.ej. q.cmd.email): recibe por el exchange directo (comando exacto,
- *   p.ej. "email.send") y por el topic (variantes, p.ej. "email.*"). Un NACK sin requeue
- *   la reenvia al exchange muerto (cmd.dead.dlx).</li>
- *   <li><b>Reintento</b> (p.ej. q.cmd.email.retry): recibe desde cmd.retry los mensajes con un
- *   error recuperable. No tiene consumidores: su TTL hace de espera y, al vencer, RabbitMQ
- *   devuelve el mensaje a la cola principal por el exchange directo.</li>
- *   <li><b>DLQ</b> (p.ej. q.cmd.email.dlq): destino final de los mensajes con error no
- *   recuperable o que agotaron sus reintentos. Se dejan ahi para revisarlos o reprocesarlos.</li>
- * </ul>
- */
+
 @Configuration
 public class RabbitTopologyConfig {
 
